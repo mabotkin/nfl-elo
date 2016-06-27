@@ -1,7 +1,7 @@
 import nflgame
 
-games = nflgame.games(2015)
+games = nflgame.games(2014)
 players = nflgame.combine_game_stats(games)
-for p in players.rushing().sort('rushing_yds').limit(5):
-	msg = '%s %d carries for %d yards and %d TDs'
-	print msg % (p, p.rushing_att, p.rushing_yds, p.rushing_tds)
+for p in players.passing().sort('passing_yds').limit(5):
+	msg = '%s : %d yds'
+	print msg % (p,p.passing_yds)
