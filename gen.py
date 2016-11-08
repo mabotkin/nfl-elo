@@ -1,4 +1,5 @@
 import nflgame
+import os
 from pickle import dump
 
 START_YEAR = 2009
@@ -94,6 +95,9 @@ config = {}
 config["ELO_DIFF"] = ELO_DIFF
 config["ELO_BASE"] = ELO_BASE
 config["START_YEAR"] = START_YEAR
+
+if not os.path.exists("pkl/"):
+	os.makedirs("pkl/")
 
 fout = open("pkl/teamindex.pkl","wb")
 dump(team_to_index,fout,protocol=2)
