@@ -95,13 +95,13 @@ config["ELO_DIFF"] = ELO_DIFF
 config["ELO_BASE"] = ELO_BASE
 config["START_YEAR"] = START_YEAR
 
-fout = open("teamindex.pkl","wb")
+fout = open("pkl/teamindex.pkl","wb")
 dump(team_to_index,fout,protocol=2)
 fout.close()
-fout = open("elo.pkl","wb")
+fout = open("pkl/elo.pkl","wb")
 dump(elos,fout,protocol=2)
 fout.close()
-fout = open("config.pkl","wb")
+fout = open("pkl/config.pkl","wb")
 dump(config,fout,protocol=2)
 fout.close()
 

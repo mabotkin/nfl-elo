@@ -11,9 +11,9 @@ WEEK = 10
 
 SORT_BY_CONFIDENCE = True
 
-team_to_index = load( open( "teamindex.pkl", "rb"))
-elos = load( open( "elo.pkl", "rb"))
-config = load( open( "config.pkl", "rb"))
+team_to_index = load( open( "pkl/teamindex.pkl", "rb"))
+elos = load( open( "pkl/elo.pkl", "rb"))
+config = load( open( "pkl/config.pkl", "rb"))
 
 ELO_DIFF = config["ELO_DIFF"]
 ELO_BASE = config["ELO_BASE"]
