@@ -38,7 +38,7 @@ team_to_index = {}
 
 ind = 0
 for i in nflgame.teams:
-	if i[0] == "LA":
+	if i[0] == "STL":
 		continue
 	team_to_index[i[0]] = ind
 	elos[ind][0][0] = INIT_ELO
@@ -59,10 +59,10 @@ for i in range(START_YEAR, CUR_YEAR + 1):
 					for game in games:
 						hname = nflgame.standard_team(game.home)
 						aname = nflgame.standard_team(game.away)
-						if(hname == "LA"):
-							hname = "STL"
-						if(aname == "LA"):
-							aname = "STL"
+						if(hname == "STL"):
+							hname = "LA"
+						if(aname == "STL"):
+							aname = "LA"
 						hteam = team_to_index[hname]
 						ateam = team_to_index[aname]
 						elos[hteam][j][i-START_YEAR], elos[ateam][j][i-START_YEAR] = eloEval(elos[hteam][j-1][i-START_YEAR], elos[ateam][j-1][i-START_YEAR], game.score_home, game.score_away)
@@ -82,7 +82,7 @@ for i in range(START_YEAR, CUR_YEAR + 1):
 # print final elos
 rank = []
 for i in nflgame.teams:
-	if i[0] == "LA":
+	if i[0] == "STL":
 		continue
 	rank.append((elos[team_to_index[i[0]]][WEEKS_PER_YEAR][CUR_YEAR-START_YEAR],i[0]))
 

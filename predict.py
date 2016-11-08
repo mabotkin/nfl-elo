@@ -41,10 +41,10 @@ cache = []
 for game in games:
 	hname = nflgame.standard_team(game[1])
 	aname = nflgame.standard_team(game[0])
-	if(hname == "LA"):
-		hname = "STL"
-	if(aname == "LA"):
-		aname = "STL"
+	if(hname == "STL"):
+		hname = "LA"
+	if(aname == "STL"):
+		aname = "LA"
 	hteam = team_to_index[hname]
 	ateam = team_to_index[aname]
 	eloA = elos[hteam][WEEK][YEAR-START_YEAR]
