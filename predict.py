@@ -9,6 +9,8 @@ URL = "http://www.espn.com/nfl/schedule/_/week/10"
 YEAR = 2016
 WEEK = 10
 
+SORT_BY_CONFIDENCE = True
+
 team_to_index = load( open( "teamindex.pkl", "rb"))
 elos = load( open( "elo.pkl", "rb"))
 config = load( open( "config.pkl", "rb"))
@@ -35,11 +37,7 @@ while not(len(games1) == 0 and len(games2) == 0):
 		games.append((games2[0], games2[1]))
 		games2.pop(0)
 		games2.pop(0)
-
-print str(YEAR) + " Season: Week " + str(WEEK) + " Predictions:"
-print "-------------------------------------"
-print colored("0%-10%", "cyan"), colored("10%-20%", "green"), colored("20%-30%", "yellow"), colored("30%-40%","magenta"), colored("40%+", "red")
-print "-------------------------------------"
+cache = []
 for game in games:
 	hname = nflgame.standard_team(game[1])
 	aname = nflgame.standard_team(game[0])
@@ -72,4 +70,14 @@ for game in games:
 		acname = colored(aname, col)
 	else:
 		pass
-	print acname + " @ " + hcname + ": " + aname + " - " + str(100*Eb) + "% | " + hname + " - " + str(100*Ea) + "%"
+	cache.append((diff,acname + " @ " + hcname + ": " + aname + " - " + str(100*Eb) + "% | " + hname + " - " + str(100*Ea) + "% | Diff - " + str(100*diff) + "%"))
+
+if(SORT_BY_CONFIDENCE):
+	cache = sorted(cache, reverse=True)
+
+print str(YEAR) + " Season: Week " + str(WEEK) + " Predictions:"
+print "-------------------------------------"
+print colored("0%-10%", "cyan"), colored("10%-20%", "green"), colored("20%-30%", "yellow"), colored("30%-40%","magenta"), colored("40%+", "red")
+print "-------------------------------------"
+for i in cache:
+	print i[1]
