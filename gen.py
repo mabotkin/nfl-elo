@@ -124,6 +124,11 @@ if(False):
 	for i in range(len(rank)):
 		print str(i+1) + ": " + rank[i][1] + " - ELO: " + str(rank[i][0])
 
+fout = open("teamindex.pkl","wb")
+dump(team_to_index,fout,protocol=2)
+fout.close()
 fout = open("elo.pkl","wb")
 dump(elos,fout,protocol=2)
 fout.close()
+
+print "Done!"
