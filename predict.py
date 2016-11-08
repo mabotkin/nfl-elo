@@ -75,7 +75,7 @@ for game in games:
 if(SORT_BY_CONFIDENCE):
 	cache = sorted(cache, reverse=True)
 
-print str(YEAR) + " Season: Week " + str(WEEK) + " Predictions:"
+print str(YEAR) + " Season - Week " + str(WEEK) + " Predictions:"
 print "-------------------------------------"
 print colored("0%-10%", "cyan"), colored("10%-20%", "green"), colored("20%-30%", "yellow"), colored("30%-40%","magenta"), colored("40%+", "red")
 print "-------------------------------------"
