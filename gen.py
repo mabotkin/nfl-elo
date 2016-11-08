@@ -1,4 +1,5 @@
 import nflgame
+from pickle import dump
 
 START_YEAR = 2009
 CUR_YEAR = 2016
@@ -7,8 +8,29 @@ REG_WEEKS = 17
 POST_WEEKS = 4
 INIT_ELO = 1200
 
+ELO_DIFF = 400
+ELO_BASE = 10
+
 def eloEval(eloA, eloB, scoreA, scoreB):
-	diff = abs(eloA - eloB)
+	if scoreA > scoreB:
+		Sa = 1
+		Sb = 0
+	elif scoreA < scoreB:
+		Sa = 0
+		Sb = 1
+	else:
+		Sa = 0.5
+		Sb = 0.5
+	Ea = 1/(1 + ELO_BASE**((eloB - eloA)/ELO_DIFF))
+	Eb = 1/(1 + ELO_BASE**((eloA - eloB)/ELO_DIFF))
+	ELO_FACTOR = abs(scoreA - scoreB)
+	Ra = eloA + ELO_FACTOR*(Sa - Ea)
+	Rb = eloB + ELO_FACTOR*(Sb - Eb)
+	return Ra, Rb
+
+def eloEval_old(eloA, eloB, scoreA, scoreB):
+	FACTOR = 5
+	diff = max(abs(eloA - eloB),FACTOR*abs(scoreA-scoreB))
 	if scoreA == scoreB:
 		if eloA < eloB:
 			eloA += (0.2)*diff
@@ -24,7 +46,6 @@ def eloEval(eloA, eloB, scoreA, scoreB):
 			eloA -= (0.1)*diff
 			eloB += (0.1)*diff
 		else:
-			diff = scoreA - scoreB
 			eloA += (0.2)*diff
 			eloB -= (0.2)*diff
 	elif scoreA < scoreB:
@@ -35,7 +56,6 @@ def eloEval(eloA, eloB, scoreA, scoreB):
 			eloA += (0.3)*diff
 			eloB -= (0.3)*diff
 		else:
-			diff = scoreB - scoreA
 			eloA -= (0.2)*diff
 			eloB += (0.2)*diff
 	return int(eloA), int(eloB)
@@ -92,13 +112,18 @@ for i in range(START_YEAR, CUR_YEAR + 1):
 			elos[x][0][i-START_YEAR+1] = (elos[x][WEEKS_PER_YEAR][i-START_YEAR] + INIT_ELO)/2
 
 # print final elos
-rank = []
-for i in nflgame.teams:
-	if i[0] == "LA":
-		continue
-	rank.append((elos[team_to_index[i[0]]][WEEKS_PER_YEAR][CUR_YEAR-START_YEAR],i[0]))
+if(False):
+	rank = []
+	for i in nflgame.teams:
+		if i[0] == "LA":
+			continue
+		rank.append((elos[team_to_index[i[0]]][WEEKS_PER_YEAR][CUR_YEAR-START_YEAR],i[0]))
 
-rank = sorted(rank, reverse=True)
-print "Final ELO Rankings:"
-for i in range(len(rank)):
-	print str(i+1) + ": " + rank[i][1] + " - ELO: " + str(rank[i][0])
+	rank = sorted(rank, reverse=True)
+	print "Final ELO Rankings:"
+	for i in range(len(rank)):
+		print str(i+1) + ": " + rank[i][1] + " - ELO: " + str(rank[i][0])
+
+fout = open("elo.pkl","wb")
+dump(elos,fout,protocol=2)
+fout.close()
