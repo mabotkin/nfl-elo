@@ -30,7 +30,7 @@ The ELO of each team is "pushed" towards the initial ELO at the end of every sea
 
 Here is a screenshot of the ELO rankings generated, as of Week 9 of the 2016 NFL Season.
 
-![Week 9, 2016](/screenshots/screenshot2?raw=true)
+![Week 9, 2016](/screenshots/screenshot2.png?raw=true)
 
 ## Prediction
 
@@ -38,7 +38,7 @@ The prediction system simply uses the expected winning percentage given by the E
 
 Here is a screenshot of the predictions made for Week 10 using data through Week 9 of the 2016 NFL Season.
 
-![Week 9, 2016](/screenshots/screenshot1?raw=true)
+![Week 9, 2016](/screenshots/screenshot1.png?raw=true)
 
 ## Further Work
 
