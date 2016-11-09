@@ -1,0 +1,4 @@
+nflgame==1.2.20
+termcolor==1.1.0
+requests==2.11.1
+lxml==3.5.0

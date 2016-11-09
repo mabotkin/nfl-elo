@@ -4,7 +4,12 @@ NFL-ELO is a project to attempt to give ELO rankings to each NFL team, based on 
 
 ## Running the Program
 
-To run the program, first, we must generate the ELO rankings, stored in pickle dump files.  Run
+First, install all required modules using
+```bash
+$ pip install -r requirements.txt
+```
+
+To run the program, generate the ELO rankings to be stored in pickle dump files.  Run
 
 ```bash
 $ python gen.py
