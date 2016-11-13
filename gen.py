@@ -1,4 +1,5 @@
 import nflgame
+import math
 import os
 from pickle import dump
 
@@ -7,14 +8,18 @@ CUR_YEAR = 2016
 CUR_WEEK = 9
 REG_WEEKS = 17
 POST_WEEKS = 4
-INIT_ELO = 1200
 
 SEASON_RESET = 1.0/3.0 # amount of elo "preserved" at the end of a season
 
-ELO_DIFF = 400
-ELO_BASE = 10
+INIT_ELO = 1200
+ELO_DIFF = 200
+ELO_BASE = 4
 
-def eloEval(eloA, eloB, scoreA, scoreB):
+ELO_CONSTANT = 1
+STREAK_CONSTANT = 1
+STREAK_LIMIT = 4
+
+def eloEval(eloA, eloB, scoreA, scoreB, streakA, streakB):
 	if scoreA > scoreB:
 		Sa = 1
 		Sb = 0
@@ -26,15 +31,26 @@ def eloEval(eloA, eloB, scoreA, scoreB):
 		Sb = 0.5
 	Ea = 1/(1 + ELO_BASE**((eloB - eloA)/ELO_DIFF))
 	Eb = 1/(1 + ELO_BASE**((eloA - eloB)/ELO_DIFF))
-	ELO_FACTOR = abs(scoreA - scoreB)
-	Ra = eloA + ELO_FACTOR*(Sa - Ea)
-	Rb = eloB + ELO_FACTOR*(Sb - Eb)
+	ELO_FACTOR = ELO_CONSTANT*abs(scoreA - scoreB)
+	# winning a lot in a row makes you gain more per win, up to a limit (logistic growth)
+	if scoreA > scoreB:
+		STREAK_FACTOR_A = (-0.5)*STREAK_LIMIT + (1.5*STREAK_LIMIT)/((1.0 + math.exp((-1)*STREAK_CONSTANT*streakA))) # ranges from 1 to STREAK_LIMIT
+		STREAK_FACTOR_B = 1
+	elif scoreB > scoreA:
+		STREAK_FACTOR_A = 1
+		STREAK_FACTOR_B = (-0.5)*STREAK_LIMIT + (1.5*STREAK_LIMIT)/((1.0 + math.exp((-1)*STREAK_CONSTANT*streakB)))
+	else:
+		STREAK_FACTOR_A = 1
+		STREAK_FACTOR_B = 1
+	Ra = eloA + STREAK_FACTOR_A*ELO_FACTOR*(Sa - Ea)
+	Rb = eloB + STREAK_FACTOR_B*ELO_FACTOR*(Sb - Eb)
 	return Ra, Rb
 
 WEEKS_PER_YEAR = REG_WEEKS + POST_WEEKS
 
 # elos[teamid][week][year]
 elos = [[[0 for i in range(CUR_YEAR-START_YEAR+1)] for i in range(WEEKS_PER_YEAR+1)] for i in range(len(nflgame.teams)-1)]
+streaks = [0 for i in range(len(nflgame.teams) - 1)]
 
 team_to_index = {}
 
@@ -67,7 +83,16 @@ for i in range(START_YEAR, CUR_YEAR + 1):
 							aname = "LA"
 						hteam = team_to_index[hname]
 						ateam = team_to_index[aname]
-						elos[hteam][j][i-START_YEAR], elos[ateam][j][i-START_YEAR] = eloEval(elos[hteam][j-1][i-START_YEAR], elos[ateam][j-1][i-START_YEAR], game.score_home, game.score_away)
+						elos[hteam][j][i-START_YEAR], elos[ateam][j][i-START_YEAR] = eloEval(elos[hteam][j-1][i-START_YEAR], elos[ateam][j-1][i-START_YEAR], game.score_home, game.score_away, streaks[hteam], streaks[ateam])
+						#update streaks
+						if game.score_home > game.score_away:
+							streaks[hteam] += 1
+							streaks[ateam] = 0
+						elif game.score_away > game.score_home:
+							streaks[hteam] = 0
+							streaks[ateam] += 1
+						else: #if tie dont change
+							pass
 		except TypeError:
 			if(j <= REG_WEEKS):
 				print "Error in Week " + str(j) + " of " + str(i) + " season"
