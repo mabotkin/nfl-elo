@@ -9,6 +9,8 @@ REG_WEEKS = 17
 POST_WEEKS = 4
 INIT_ELO = 1200
 
+SEASON_RESET = 1.0/3.0 # amount of elo "preserved" at the end of a season
+
 ELO_DIFF = 400
 ELO_BASE = 10
 
@@ -77,7 +79,7 @@ for i in range(START_YEAR, CUR_YEAR + 1):
 		#end of year, smoosh everyone towards middle
 	if i != CUR_YEAR:
 		for x in range(len(nflgame.teams)-1):
-			elos[x][0][i-START_YEAR+1] = (elos[x][WEEKS_PER_YEAR][i-START_YEAR] + INIT_ELO)/2
+			elos[x][0][i-START_YEAR+1] = (SEASON_RESET)*elos[x][WEEKS_PER_YEAR][i-START_YEAR] + (1-SEASON_RESET)*INIT_ELO
 
 # print final elos
 rank = []
