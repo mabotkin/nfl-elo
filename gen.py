@@ -9,15 +9,16 @@ CUR_WEEK = 9
 REG_WEEKS = 17
 POST_WEEKS = 4
 
-SEASON_RESET = 1.0/3.0 # amount of elo "preserved" at the end of a season
-
 INIT_ELO = 1200
 ELO_DIFF = 200
 ELO_BASE = 4
 
-ELO_CONSTANT = 1
-STREAK_CONSTANT = 1
-STREAK_LIMIT = 4
+SEASON_RESET = 1.0/3.0 # amount of elo "preserved" at the end of a season
+
+ELO_CONSTANT = 2.5
+RISING_STREAK_CONSTANT = 0.6
+FALLING_STREAK_CONSTANT = 0.8
+STREAK_LIMIT = 4 #maximum multiplier from a streak
 
 def eloEval(eloA, eloB, scoreA, scoreB, streakA, streakB):
 	if scoreA > scoreB:
@@ -32,13 +33,25 @@ def eloEval(eloA, eloB, scoreA, scoreB, streakA, streakB):
 	Ea = 1/(1 + ELO_BASE**((eloB - eloA)/ELO_DIFF))
 	Eb = 1/(1 + ELO_BASE**((eloA - eloB)/ELO_DIFF))
 	ELO_FACTOR = ELO_CONSTANT*abs(scoreA - scoreB)
-	# winning a lot in a row makes you gain more per win, up to a limit (logistic growth)
+	# winning a lot in a row makes you gain more per win, up to a limit (logistic growth) - losing also accumulates
 	if scoreA > scoreB:
-		STREAK_FACTOR_A = (-0.5)*STREAK_LIMIT + (1.5*STREAK_LIMIT)/((1.0 + math.exp((-1)*STREAK_CONSTANT*streakA))) # ranges from 1 to STREAK_LIMIT
-		STREAK_FACTOR_B = 1
+		if streakA >= 0: # ranges from 1 to STREAK_LIMIT
+			STREAK_FACTOR_A = (-0.5)*STREAK_LIMIT + (1.5*STREAK_LIMIT)/((1.0 + math.exp((-1)*RISING_STREAK_CONSTANT*abs(streakA))))
+		else:
+			STREAK_FACTOR_A = 1
+		if streakB < 0:
+			STREAK_FACTOR_B = (-0.5)*STREAK_LIMIT + (1.5*STREAK_LIMIT)/((1.0 + math.exp((-1)*FALLING_STREAK_CONSTANT*abs(streakB))))
+		else:
+			STREAK_FACTOR_B = 1
 	elif scoreB > scoreA:
-		STREAK_FACTOR_A = 1
-		STREAK_FACTOR_B = (-0.5)*STREAK_LIMIT + (1.5*STREAK_LIMIT)/((1.0 + math.exp((-1)*STREAK_CONSTANT*streakB)))
+		if streakA < 0:
+			STREAK_FACTOR_A = (-0.5)*STREAK_LIMIT + (1.5*STREAK_LIMIT)/((1.0 + math.exp((-1)*FALLING_STREAK_CONSTANT*abs(streakA))))
+		else:
+			STREAK_FACTOR_A = 1
+		if streakB >= 0:
+			STREAK_FACTOR_B = (-0.5)*STREAK_LIMIT + (1.5*STREAK_LIMIT)/((1.0 + math.exp((-1)*RISING_STREAK_CONSTANT*abs(streakB))))
+		else:
+			STREAK_FACTOR_B = 1
 	else:
 		STREAK_FACTOR_A = 1
 		STREAK_FACTOR_B = 1
@@ -86,11 +99,23 @@ for i in range(START_YEAR, CUR_YEAR + 1):
 						elos[hteam][j][i-START_YEAR], elos[ateam][j][i-START_YEAR] = eloEval(elos[hteam][j-1][i-START_YEAR], elos[ateam][j-1][i-START_YEAR], game.score_home, game.score_away, streaks[hteam], streaks[ateam])
 						#update streaks
 						if game.score_home > game.score_away:
-							streaks[hteam] += 1
-							streaks[ateam] = 0
+							if streaks[hteam] >= 0:
+								streaks[hteam] += 1
+							else:
+								streaks[hteam] = 0
+							if streaks[ateam] <= 0:
+								streaks[ateam] -= 1
+							else:
+								streaks[ateam] = 0
 						elif game.score_away > game.score_home:
-							streaks[hteam] = 0
-							streaks[ateam] += 1
+							if streaks[hteam] <= 0:
+								streaks[hteam] -= 1
+							else:
+								streaks[hteam] = 0
+							if streaks[ateam] >= 0:
+								streaks[ateam] += 1
+							else:
+								streaks[ateam] = 0
 						else: #if tie dont change
 							pass
 		except TypeError:
