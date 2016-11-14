@@ -5,9 +5,9 @@ from lxml import html
 import requests
 
 #schedule URL
-URL = "http://www.espn.com/nfl/schedule/_/week/10"
+URL = "http://www.espn.com/nfl/schedule/_/week/11"
 YEAR = 2016
-WEEK = 10
+WEEK = 11
 
 SORT_BY_CONFIDENCE = True
 
@@ -52,13 +52,13 @@ for game in games:
 	Ea = 1/(1 + ELO_BASE**((eloB - eloA)/ELO_DIFF))
 	Eb = 1/(1 + ELO_BASE**((eloA - eloB)/ELO_DIFF))
 	diff = abs(Ea - Eb)
-	if diff < 0.1:
+	if diff < 0.2:
 		col = "cyan"
-	elif diff < 0.2:
-		col = "green"
-	elif diff < 0.3:
-		col = "yellow"
 	elif diff < 0.4:
+		col = "green"
+	elif diff < 0.6:
+		col = "yellow"
+	elif diff < 0.8:
 		col = "magenta"
 	else:
 		col = "red"
@@ -77,7 +77,7 @@ if(SORT_BY_CONFIDENCE):
 
 print str(YEAR) + " Season - Week " + str(WEEK) + " Predictions:"
 print "-------------------------------------"
-print colored("0%-10%", "cyan"), colored("10%-20%", "green"), colored("20%-30%", "yellow"), colored("30%-40%","magenta"), colored("40%+", "red")
+print colored("0%-20%", "cyan"), colored("20%-40%", "green"), colored("40%-60%", "yellow"), colored("60%-80%","magenta"), colored("80%+", "red")
 print "-------------------------------------"
 for i in cache:
 	print i[1]

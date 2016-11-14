@@ -5,7 +5,7 @@ from pickle import dump
 
 START_YEAR = 2009
 CUR_YEAR = 2016
-CUR_WEEK = 9
+CUR_WEEK = 10
 REG_WEEKS = 17
 POST_WEEKS = 4
 
