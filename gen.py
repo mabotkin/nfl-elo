@@ -16,7 +16,7 @@ ELO_BASE = 4
 SEASON_RESET = 1.0/3.0 # amount of elo "preserved" at the end of a season
 
 ELO_CONSTANT = 2.5
-RISING_STREAK_CONSTANT = 0.6
+RISING_STREAK_CONSTANT = 0.5
 FALLING_STREAK_CONSTANT = 0.8
 STREAK_LIMIT = 4 #maximum multiplier from a streak
 
