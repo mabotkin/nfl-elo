@@ -10,14 +10,14 @@ REG_WEEKS = 17
 POST_WEEKS = 4
 
 INIT_ELO = 1200
-ELO_DIFF = 200
-ELO_BASE = 4
+ELO_DIFF = 400
+ELO_BASE = 10
 
 SEASON_RESET = 1.0/3.0 # amount of elo "preserved" at the end of a season
 
-ELO_CONSTANT = 2.5
-RISING_STREAK_CONSTANT = 0.5
-FALLING_STREAK_CONSTANT = 0.8
+ELO_CONSTANT = 30
+RISING_STREAK_CONSTANT = 0.3
+FALLING_STREAK_CONSTANT = 0.4
 STREAK_LIMIT = 4 #maximum multiplier from a streak
 
 def eloEval(eloA, eloB, scoreA, scoreB, streakA, streakB):
@@ -32,7 +32,7 @@ def eloEval(eloA, eloB, scoreA, scoreB, streakA, streakB):
 		Sb = 0.5
 	Ea = 1/(1 + ELO_BASE**((eloB - eloA)/ELO_DIFF))
 	Eb = 1/(1 + ELO_BASE**((eloA - eloB)/ELO_DIFF))
-	ELO_FACTOR = ELO_CONSTANT*abs(scoreA - scoreB)
+	ELO_FACTOR = ELO_CONSTANT*math.log(abs(scoreA - scoreB)+1)
 	# winning a lot in a row makes you gain more per win, up to a limit (logistic growth) - losing also accumulates
 	if scoreA > scoreB:
 		if streakA >= 0: # ranges from 1 to STREAK_LIMIT
