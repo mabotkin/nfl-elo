@@ -13,13 +13,13 @@ INIT_ELO = 1300
 ELO_DIFF = 200
 ELO_BASE = 4
 
-SEASON_RESET = 1.0/3.0 # amount of elo "preserved" at the end of a season
+SEASON_RESET = 0.25 # amount of elo "preserved" at the end of a season
 
 ELO_CONSTANT = 28
-RISING_STREAK_CONSTANT = 0.5
-FALLING_STREAK_CONSTANT = 0.4
-GAME_MAGNITUDE_CONSTANT = 0.23
-STREAK_LIMIT = 4 #maximum multiplier from a streak
+RISING_STREAK_CONSTANT = 0.55
+FALLING_STREAK_CONSTANT = 0.37
+GAME_MAGNITUDE_CONSTANT = 0.26
+STREAK_LIMIT = 5 #maximum multiplier from a streak
 
 def eloEval(eloA, eloB, scoreA, scoreB, streakA, streakB):
 	if scoreA > scoreB:

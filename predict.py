@@ -5,9 +5,9 @@ from lxml import html
 import requests
 
 #schedule URL
-URL = "http://www.espn.com/nfl/schedule/_/week/11"
+URL = "http://www.espn.com/nfl/schedule/_/week/12"
 YEAR = 2016
-WEEK = 11
+WEEK = 12
 
 SORT_BY_CONFIDENCE = True
 
