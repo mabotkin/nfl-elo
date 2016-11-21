@@ -10,6 +10,7 @@ YEAR = 2016
 WEEK = 12
 
 SORT_BY_CONFIDENCE = True
+H_TEAM_ADV = 20
 
 team_to_index = load( open( "pkl/teamindex.pkl", "rb"))
 elos = load( open( "pkl/elo.pkl", "rb"))
@@ -47,7 +48,7 @@ for game in games:
 		aname = "LA"
 	hteam = team_to_index[hname]
 	ateam = team_to_index[aname]
-	eloA = elos[hteam][WEEK][YEAR-START_YEAR]
+	eloA = elos[hteam][WEEK][YEAR-START_YEAR] + H_TEAM_ADV
 	eloB = elos[ateam][WEEK][YEAR-START_YEAR]
 	Ea = 1/(1 + ELO_BASE**((eloB - eloA)/ELO_DIFF))
 	Eb = 1/(1 + ELO_BASE**((eloA - eloB)/ELO_DIFF))
