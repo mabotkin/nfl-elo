@@ -23,6 +23,8 @@ $ python predict.py
 
 This file will output the predictions made using the ELO system.
 
+There is also a web frontend to the project to make it more easily accessible - run `python2 nfl.py` to run the web frontend on port 5001.
+
 ## Data
 
 The data used is from the [nflgame](https://github.com/BurntSushi/nflgame) repository, dating back to 2009.
