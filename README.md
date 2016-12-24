@@ -23,7 +23,7 @@ $ python predict.py
 
 This file will output the predictions made using the ELO system.
 
-There is also a web frontend to the project to make it more easily accessible - run `python2 nfl.py` to run the web frontend on port 5001.
+There is also a web frontend to the project to make it more easily accessible - run `python2 nfl.py` to run the web frontend on port 5001.  This runs on Flask, which is not included in the requirements.txt file.
 
 ## Data
 
